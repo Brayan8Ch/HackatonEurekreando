@@ -89,6 +89,9 @@
   "overrides": {
     "@vitejs/plugin-react-swc": {
       "vite": "$vite"
+    },
+    "lovable-tagger": {
+      "vite": "$vite"
     }
   }
 }
