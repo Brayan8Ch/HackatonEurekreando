@@ -15,7 +15,7 @@ const Hero = ({ onGenerate }: { onGenerate: () => void }) => {
           </span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground animate-fade-in">
-          La primera plataforma de <span className="text-foreground font-medium">guías de indagación</span> de docentes de educación básica regular (EBR) </p>
+          La primera plataforma de <span className="text-foreground font-medium">guías de indagación</span> para docentes de educación básica regular (EBR) </p>
         <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-in">
           <Button size="lg" onClick={onGenerate} className="bg-gradient-primary hover:opacity-95 shadow-glow text-base h-12 px-7">
             Generar mi primera guía
