@@ -35,7 +35,7 @@ const Hero = ({ onGenerate }: { onGenerate: () => void }) => {
         <div className="mt-16 mx-auto max-w-4xl rounded-2xl border border-border bg-card shadow-elegant overflow-hidden animate-scale-in">
           <div className="flex items-center gap-1.5 border-b border-border px-4 py-3 bg-muted/40">
             <span className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
-            <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
+            <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/40" />
             <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
             <span className="ml-3 text-xs text-muted-foreground">edhack.stem / generador</span>
           </div>
