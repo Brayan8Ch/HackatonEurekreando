@@ -76,7 +76,14 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
   const [departamento, setDepartamento] = useState("");
   const [tema, setTema] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [agentStep, setAgentStep] = useState(0);
   const [routes, setRoutes] = useState<RouteOption[]>([]);
+
+  const AGENT_MESSAGES = [
+    "El agente investigador está trabajando",
+    "El agente verificador está trabajando",
+    "El agente pedagógico está trabajando",
+  ];
 
   const steps = ["Configuración de Entorno", "Selección de Proyecto"];
 
@@ -86,16 +93,21 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
       return;
     }
 
+    setAgentStep(0);
     setIsLoading(true);
 
-    await new Promise((r) => setTimeout(r, 2800));
+    const t1 = setTimeout(() => setAgentStep(1), 3000);
+    const t2 = setTimeout(() => setAgentStep(2), 6000);
+    const t3 = setTimeout(() => {
+      setRoutes(MOCK_ROUTES);
+      setIsLoading(false);
+      setStep(1);
+      toast.success("¡3 proyectos generados!", {
+        description: "El Etnógrafo de Datos analizó tu contexto.",
+      });
+    }, 9000);
 
-    setRoutes(MOCK_ROUTES);
-    setIsLoading(false);
-    setStep(1);
-    toast.success("¡3 proyectos generados!", {
-      description: "El Etnógrafo de Datos analizó tu contexto.",
-    });
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   };
 
   const selectRoute = (route: RouteOption) => {
@@ -122,7 +134,7 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
             </div>
           </div>
 
-          <h3 className="font-display text-xl font-bold">El Etnógrafo está trabajando</h3>
+          <h3 className="font-display text-xl font-bold">{AGENT_MESSAGES[agentStep]}</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Analizando el contexto de <span className="font-semibold text-foreground">{departamento}</span> para{" "}
             <span className="font-semibold text-foreground">{tema}</span>...
