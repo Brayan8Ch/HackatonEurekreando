@@ -11,7 +11,7 @@ const Hero = ({ onGenerate }: { onGenerate: () => void }) => {
           <span className="inline-flex items-center gap-3">
             <span className="line-through text-muted-foreground/60 font-medium">de 8h</span>
             <ArrowRight className="h-8 w-8 md:h-12 md:w-12 text-primary" />
-            <span className="text-gradient">a 2 horas</span>
+            <span className="text-gradient">a minutos</span>
           </span>
         </h1>
         <p className="mx-auto mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground animate-fade-in">
