@@ -21,8 +21,7 @@ const Navbar = ({ onNavigate }: NavbarProps) => {
         <nav className="hidden md:flex items-center gap-7 text-sm text-muted-foreground">
           <button onClick={() => onNavigate("contextos")} className="hover:text-foreground transition-colors">Contextos</button>
           <button onClick={() => onNavigate("generador")} className="hover:text-foreground transition-colors">Generador</button>
-          <button onClick={() => onNavigate("workspace")} className="hover:text-foreground transition-colors">Workspace</button>
-          <button onClick={() => onNavigate("dashboard")} className="hover:text-foreground transition-colors">Mi Impacto</button>
+
         </nav>
         <Button onClick={() => onNavigate("generador")} className="bg-gradient-primary hover:opacity-90 transition-opacity shadow-glow">
           Generar guía
