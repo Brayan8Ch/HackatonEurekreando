@@ -93,21 +93,40 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
       return;
     }
 
+    const startTime = Date.now();
     setAgentStep(0);
     setIsLoading(true);
 
     const t1 = setTimeout(() => setAgentStep(1), 3000);
     const t2 = setTimeout(() => setAgentStep(2), 6000);
-    const t3 = setTimeout(() => {
-      setRoutes(MOCK_ROUTES);
+
+    try {
+      const levelStr = nivel === "secundaria" ? "Secundaria" : "Primaria";
+      const res = await fetch("/api/guide/routes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ location: departamento, level: levelStr, topic: tema }),
+      });
+
+      if (!res.ok) throw new Error(`Error ${res.status}`);
+
+      const data = await res.json();
+
+      const elapsed = Date.now() - startTime;
+      if (elapsed < 3000) await new Promise((r) => setTimeout(r, 3000 - elapsed));
+
+      clearTimeout(t1);
+      clearTimeout(t2);
+      setRoutes(data.routes || []);
       setIsLoading(false);
       setStep(1);
-      toast.success("¡3 proyectos generados!", {
-        description: "El Etnógrafo de Datos analizó tu contexto.",
-      });
-    }, 9000);
-
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+      toast.success("¡3 proyectos generados!", { description: "El Etnógrafo de Datos analizó tu contexto." });
+    } catch {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      setIsLoading(false);
+      toast.error("Error de conexión", { description: "Verificá que el backend esté corriendo en el puerto 8000." });
+    }
   };
 
   const selectRoute = (route: RouteOption) => {

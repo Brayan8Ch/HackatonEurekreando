@@ -28,7 +28,7 @@ Sé específico con el contexto. Si la ubicación es Arequipa → mencioná el M
 Si es Loreto → selva, río Amazonas, biodiversidad, comunidades nativas. No seas genérico.
 Respondé siempre en español.
 """,
-    model="gpt-4o",
+    model="gpt-5.5",
     output_type=RoutesOutput,
 )
 
@@ -80,7 +80,7 @@ Para validar experimentos verificá:
 Si encontrás errores científicos, corregilos y documentá las correcciones.
 Respondé siempre en español.
 """,
-    model="gpt-4o",
+    model="gpt-5.5",
     output_type=ValidatorOutput,
 )
 
@@ -125,6 +125,6 @@ Principios irrenunciables:
 
 Respondé siempre en español.
 """,
-    model="gpt-4o",
+    model="gpt-5.5",
     output_type=GuideOutput,
 )

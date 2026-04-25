@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -85,16 +85,69 @@ const MOCK_GUIDE = {
 
 const Workspace = ({ config }: WorkspaceProps) => {
   const [guide, setGuide] = useState<typeof MOCK_GUIDE | null>(null);
+  const [error, setError] = useState("");
+  const fetchedRef = useRef(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => setGuide(MOCK_GUIDE), 1200);
-    return () => clearTimeout(timer);
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    const generate = async () => {
+      try {
+        const res = await fetch("/api/guide/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(config),
+        });
+
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+
+        const reader = res.body?.getReader();
+        const decoder = new TextDecoder();
+        let buffer = "";
+
+        while (reader) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const blocks = buffer.split("\n\n");
+          buffer = blocks.pop() ?? "";
+
+          for (const block of blocks) {
+            const eventMatch = block.match(/event:\s*(.*)/);
+            const dataMatch = block.match(/data:\s*(.*)/);
+            if (!eventMatch || !dataMatch) continue;
+
+            const event = eventMatch[1].trim();
+            const data = JSON.parse(dataMatch[1]);
+
+            if (event === "complete") setGuide(data.guide);
+            if (event === "error") setError(data.message);
+          }
+        }
+      } catch (err: unknown) {
+        setError(err instanceof Error ? err.message : "Error desconocido");
+      }
+    };
+
+    generate();
   }, [config]);
 
   const nivelLabel = config.level.charAt(0).toUpperCase() + config.level.slice(1);
   const depLabel = config.location
     ? config.location.charAt(0).toUpperCase() + config.location.slice(1)
     : "Nacional";
+
+  if (error) {
+    return (
+      <section id="workspace" className="container py-24 text-center">
+        <p className="text-destructive font-semibold">Error al generar la guía</p>
+        <p className="mt-2 text-muted-foreground">{error}</p>
+        <p className="mt-1 text-sm text-muted-foreground">Verificá que el backend esté corriendo en el puerto 8001.</p>
+      </section>
+    );
+  }
 
   if (!guide) {
     return (
