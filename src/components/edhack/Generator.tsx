@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { ArrowLeft, ArrowRight, Check, Sparkles, Mountain, Waves, TreePine, Building2, Tractor, FlaskConical } from "lucide-react";
+import { ArrowRight, Check, Sparkles, Loader2, FlaskConical, Leaf, Globe, MapPin, GraduationCap, BookMarked } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -12,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -21,181 +20,297 @@ const departamentos = [
   "Lambayeque", "Lima", "Loreto", "Madre de Dios", "Moquegua", "Pasco",
   "Piura", "Puno", "San Martín", "Tacna", "Tumbes", "Ucayali"
 ];
-const entornos = [
-  { id: "urbano", label: "Urbano", icon: Building2 },
-  { id: "rural", label: "Rural", icon: Tractor },
+
+const MOCK_ROUTES = [
+  {
+    id: 1,
+    title: "El Sistema Solar en tu Patio: Órbitas, Gravedad y Distancias Reales",
+    description:
+      "Los estudiantes replican el sistema solar a escala en el patio usando objetos del aula como planetas. Resuelven por qué los planetas no caen al Sol y qué mantiene las órbitas estables.",
+    local_context: "",
+    key_materials: [],
+    type: "física",
+  },
+  {
+    id: 2,
+    title: "La Zona Dorada: ¿Por qué Solo la Tierra Puede Albergar Vida?",
+    description:
+      "Los estudiantes investigan la 'zona habitable' del sistema solar: la franja donde el agua puede existir en estado líquido. Analizan temperatura, distancia al Sol y atmósfera en cada planeta.",
+    local_context: "",
+    key_materials: [],
+    type: "biológica",
+  },
+  {
+    id: 3,
+    title: "Júpiter: El Escudo Gigante que Protege la Tierra de Asteroides",
+    description:
+      "Los estudiantes modelan cómo la gravedad de Júpiter desvía asteroides que de otro modo impactarían la Tierra, y analizan los cráteres de la Luna como evidencia de impactos pasados.",
+    local_context: "",
+    key_materials: [],
+    type: "socioambiental",
+  },
 ];
 
-interface GeneratorProps {
-  onGenerated: (data: { departamento?: string; entorno: string; fenomeno: string; pro: boolean }) => void;
+const typeConfig = {
+  física: { icon: FlaskConical, label: "Experimentación Física", color: "text-blue-500" },
+  biológica: { icon: Leaf, label: "Observación Biológica", color: "text-green-500" },
+  socioambiental: { icon: Globe, label: "Impacto Socio-Ambiental", color: "text-orange-500" },
+};
+
+interface RouteOption {
+  id: number;
+  title: string;
+  description: string;
+  local_context: string;
+  key_materials: string[];
+  type?: string;
 }
 
-const Generator = ({ onGenerated }: GeneratorProps) => {
+interface GeneratorProps {
+  onRouteSelected: (config: { location: string; level: string; topic: string; chosen_route: RouteOption }) => void;
+}
+
+const Generator = ({ onRouteSelected }: GeneratorProps) => {
   const [step, setStep] = useState(0);
+  const [nivel, setNivel] = useState("secundaria");
   const [departamento, setDepartamento] = useState("");
-  const [entorno, setEntorno] = useState("rural");
-  const [competencia, setCompetencia] = useState("Indaga mediante métodos científicos");
-  const [capacidades, setCapacidades] = useState("Problematiza · Diseña estrategias · Genera y registra datos");
-  const [fenomeno, setFenomeno] = useState("Hábitos de higiene en la comunidad");
-  const [pro, setPro] = useState(true);
+  const [tema, setTema] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [routes, setRoutes] = useState<RouteOption[]>([]);
 
-  const steps = ["Configuración de Entorno", "Definición Pedagógica", "Personalización de Agentes"];
+  const steps = ["Configuración de Entorno", "Selección de Proyecto"];
 
-  const handleGenerate = () => {
-    const entornoLabel = entornos.find((e) => e.id === entorno)?.label ?? "";
-    const depTexto = departamento ? `Depto: ${departamento}` : "Sin departamento";
-    toast.success(`Guía contextualizada para entorno ${entornoLabel} generada con éxito`, {
-      description: `${depTexto}${pro ? " · Modo Eureka Pro" : ""}`,
+  const handleGenerateIdeas = async () => {
+    if (!departamento || !tema) {
+      toast.error("Faltan datos", { description: "Por favor completá el departamento y el tema a revisar." });
+      return;
+    }
+
+    setIsLoading(true);
+
+    await new Promise((r) => setTimeout(r, 2800));
+
+    setRoutes(MOCK_ROUTES);
+    setIsLoading(false);
+    setStep(1);
+    toast.success("¡3 proyectos generados!", {
+      description: "El Etnógrafo de Datos analizó tu contexto.",
     });
-    onGenerated({ departamento, entorno, fenomeno, pro });
+  };
+
+  const selectRoute = (route: RouteOption) => {
+    const levelStr = nivel === "secundaria" ? "Secundaria" : "Primaria";
+    onRouteSelected({ location: departamento, level: levelStr, topic: tema, chosen_route: route });
   };
 
   return (
-    <section id="generador" className="container py-24">
-      <div className="max-w-2xl">
-        <p className="text-sm font-semibold uppercase tracking-wide text-primary">El corazón</p>
-        <h2 className="mt-3 font-display text-3xl md:text-5xl font-bold tracking-tight">
-          Generador con Scaffolding
-        </h2>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Tres pasos guiados. Una guía completa, contextualizada y lista para Eureka.
-        </p>
-      </div>
-
-      {/* Stepper */}
-      <ol className="mt-10 grid grid-cols-3 gap-3">
-        {steps.map((s, i) => (
-          <li key={s} className="flex items-center gap-3">
-            <span
-              className={cn(
-                "grid h-9 w-9 shrink-0 place-items-center rounded-full border text-sm font-semibold transition-all",
-                i < step && "bg-success text-success-foreground border-success",
-                i === step && "bg-gradient-primary text-primary-foreground border-transparent shadow-glow",
-                i > step && "border-border bg-card text-muted-foreground"
-              )}
-            >
-              {i < step ? <Check className="h-4 w-4" /> : i + 1}
-            </span>
-            <div className="min-w-0">
-              <p className="text-xs uppercase tracking-wide text-muted-foreground">Paso {i + 1}</p>
-              <p className={cn("text-sm font-medium truncate", i === step && "text-foreground")}>{s}</p>
-            </div>
-          </li>
-        ))}
-      </ol>
-
-      <div className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-10 shadow-elegant">
-        {step === 0 && (
-          <div className="grid gap-8 animate-fade-in">
-            <div>
-              <Label className="text-sm font-semibold">Departamento</Label>
-              <div className="mt-3">
-                <Select value={departamento} onValueChange={setDepartamento}>
-                  <SelectTrigger className="w-full h-14 bg-background border-border rounded-xl px-5 transition-all hover:border-primary/40">
-                    <SelectValue placeholder="Selecciona un departamento..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {departamentos.map((dep) => (
-                      <SelectItem key={dep} value={dep}>
-                        {dep}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div>
-              <Label className="text-sm font-semibold">Entorno</Label>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                {entornos.map((e) => (
-                  <button
-                    key={e.id}
-                    onClick={() => setEntorno(e.id)}
-                    className={cn(
-                      "rounded-xl border p-5 text-left transition-all duration-300",
-                      entorno === e.id ? "border-primary bg-accent shadow-glow" : "border-border hover:border-primary/40"
-                    )}
-                  >
-                    <e.icon className={cn("h-6 w-6 mb-3", entorno === e.id ? "text-primary" : "text-muted-foreground")} />
-                    <p className="font-medium">{e.label}</p>
-                  </button>
-                ))}
-              </div>
+    <>
+      {/* ── Modal de carga ─────────────────────────────────────────────────── */}
+      <Dialog open={isLoading}>
+        <DialogContent
+          className="sm:max-w-md text-center gap-0 p-10"
+          onInteractOutside={(e) => e.preventDefault()}
+          hideClose
+        >
+          <div className="flex justify-center mb-6">
+            <div className="relative grid h-20 w-20 place-items-center rounded-2xl bg-gradient-primary shadow-glow">
+              <Sparkles className="h-9 w-9 text-white" />
+              <span className="absolute -bottom-1 -right-1 flex h-5 w-5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-60" />
+                <span className="relative inline-flex rounded-full h-5 w-5 bg-primary" />
+              </span>
             </div>
           </div>
-        )}
 
-        {step === 1 && (
-          <div className="grid gap-6 animate-fade-in">
-            <div>
-              <Label htmlFor="competencia" className="text-sm font-semibold">Competencia</Label>
-              <Input id="competencia" value={competencia} onChange={(e) => setCompetencia(e.target.value)} className="mt-2 h-12" />
-            </div>
-            <div>
-              <Label htmlFor="capacidades" className="text-sm font-semibold">Capacidades</Label>
-              <Input id="capacidades" value={capacidades} onChange={(e) => setCapacidades(e.target.value)} className="mt-2 h-12" />
-            </div>
-            <div>
-              <Label htmlFor="fenomeno" className="text-sm font-semibold">Fenómeno a investigar</Label>
-              <Textarea
-                id="fenomeno"
-                value={fenomeno}
-                onChange={(e) => setFenomeno(e.target.value)}
-                rows={4}
-                className="mt-2 resize-none"
-                placeholder="Ej: hábitos de higiene en la comunidad"
-              />
-              <p className="mt-2 text-xs text-muted-foreground">Basado en el formato oficial de Sesión de Aprendizaje.</p>
-            </div>
+          <h3 className="font-display text-xl font-bold">El Etnógrafo está trabajando</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Analizando el contexto de <span className="font-semibold text-foreground">{departamento}</span> para{" "}
+            <span className="font-semibold text-foreground">{tema}</span>...
+          </p>
+
+          <div className="mt-8 space-y-3 text-left">
+            {[
+              "Cruzando datos geográficos y culturales...",
+              "Identificando fenómenos STEM locales...",
+              "Diseñando 3 enfoques pedagógicos distintos...",
+            ].map((msg, i) => (
+              <div key={i} className="flex items-center gap-3 text-sm text-muted-foreground">
+                <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-primary" style={{ animationDelay: `${i * 0.3}s` }} />
+                {msg}
+              </div>
+            ))}
           </div>
-        )}
+        </DialogContent>
+      </Dialog>
 
-        {step === 2 && (
-          <div className="grid gap-6 animate-fade-in">
-            <div className="flex items-start justify-between gap-6 rounded-xl border border-border bg-accent/40 p-5">
-              <div className="flex gap-4">
-                <span className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-primary text-primary-foreground shrink-0">
-                  <Sparkles className="h-5 w-5" />
-                </span>
-                <div>
-                  <p className="font-semibold">Modo Eureka Pro</p>
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    Asegura que la guía cumpla los <span className="text-foreground font-medium">15 puntos de las bases Eureka 2025</span>: rigor científico, originalidad, viabilidad y rúbrica oficial.
-                  </p>
+      {/* ── Sección principal ──────────────────────────────────────────────── */}
+      <section id="generador" className="container py-24">
+        <div className="max-w-2xl">
+          <p className="text-sm font-semibold uppercase tracking-wide text-primary">IA en Acción</p>
+          <h2 className="mt-3 font-display text-3xl md:text-5xl font-bold tracking-tight">
+            Agentes Diseñadores
+          </h2>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Ingresá tu contexto y el Etnógrafo de Datos creará 3 proyectos Eureka adaptados a tu realidad local.
+          </p>
+        </div>
+
+        {/* Stepper */}
+        <ol className="mt-10 grid grid-cols-2 gap-3 max-w-2xl">
+          {steps.map((s, i) => (
+            <li key={s} className="flex items-center gap-3">
+              <span
+                className={cn(
+                  "grid h-9 w-9 shrink-0 place-items-center rounded-full border text-sm font-semibold transition-all",
+                  i < step && "bg-success text-success-foreground border-success",
+                  i === step && "bg-gradient-primary text-primary-foreground border-transparent shadow-glow",
+                  i > step && "border-border bg-card text-muted-foreground"
+                )}
+              >
+                {i < step ? <Check className="h-4 w-4" /> : i + 1}
+              </span>
+              <div className="min-w-0">
+                <p className="text-xs uppercase tracking-wide text-muted-foreground">Paso {i + 1}</p>
+                <p className={cn("text-sm font-medium truncate", i === step && "text-foreground")}>{s}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+
+        <div className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-10 shadow-elegant">
+
+          {/* ── Paso 1: Formulario ─────────────────────────────────────────── */}
+          {step === 0 && (
+            <div className="animate-fade-in">
+              <div className="mb-8">
+                <h3 className="font-display text-xl font-bold">Configura tu contexto</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Completá los datos de tu clase y el Etnógrafo generará 3 proyectos a medida.
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                {/* Departamento */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2 text-sm font-semibold">
+                    <MapPin className="h-4 w-4 text-primary" /> Departamento
+                  </Label>
+                  <Select value={departamento} onValueChange={setDepartamento}>
+                    <SelectTrigger className="h-12 bg-background border-border rounded-xl px-4 transition-all hover:border-primary/40 focus:ring-primary">
+                      <SelectValue placeholder="¿Dónde enseñás?" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {departamentos.map((dep) => (
+                        <SelectItem key={dep} value={dep}>{dep}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Nivel educativo */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2 text-sm font-semibold">
+                    <GraduationCap className="h-4 w-4 text-primary" /> Nivel Educativo
+                  </Label>
+                  <Select value={nivel} onValueChange={setNivel}>
+                    <SelectTrigger className="h-12 bg-background border-border rounded-xl px-4 transition-all hover:border-primary/40 focus:ring-primary">
+                      <SelectValue placeholder="Seleccioná el nivel" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="primaria">Primaria</SelectItem>
+                      <SelectItem value="secundaria">Secundaria</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
-              <Switch checked={pro} onCheckedChange={setPro} />
-            </div>
-            <div className="rounded-xl border border-dashed border-border p-5">
-              <p className="text-sm font-semibold flex items-center gap-2">
-                <FlaskConical className="h-4 w-4 text-primary" /> Agentes activados
-              </p>
-              <ul className="mt-3 grid grid-cols-2 gap-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success" /> Diseñador de scaffolding</li>
-                <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success" /> Curador contextual</li>
-                <li className="flex items-center gap-2"><Check className="h-4 w-4 text-success" /> Generador de rúbricas</li>
-                <li className="flex items-center gap-2"><Check className={cn("h-4 w-4", pro ? "text-success" : "text-muted-foreground/40")} /> Auditor Eureka 2025</li>
-              </ul>
-            </div>
-          </div>
-        )}
 
-        <div className="mt-8 flex items-center justify-between gap-3 border-t border-border pt-6">
-          <Button variant="ghost" onClick={() => setStep((s) => Math.max(0, s - 1))} disabled={step === 0}>
-            <ArrowLeft className="mr-1 h-4 w-4" /> Atrás
-          </Button>
-          {step < 2 ? (
-            <Button onClick={() => setStep((s) => s + 1)} className="bg-gradient-primary shadow-glow">
-              Siguiente <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
-          ) : (
-            <Button onClick={handleGenerate} className="bg-gradient-primary shadow-glow">
-              <Sparkles className="mr-2 h-4 w-4" /> Generar guía
-            </Button>
+              {/* Tema */}
+              <div className="mt-6 space-y-2">
+                <Label htmlFor="tema" className="flex items-center gap-2 text-sm font-semibold">
+                  <BookMarked className="h-4 w-4 text-primary" /> Tema a investigar
+                </Label>
+                <Input
+                  id="tema"
+                  value={tema}
+                  onChange={(e) => setTema(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleGenerateIdeas()}
+                  className="h-12 rounded-xl px-4 border-border transition-all hover:border-primary/40"
+                  placeholder="Ej: Sistema solar, Plantas medicinales, Contaminación del agua..."
+                />
+              </div>
+
+              {/* Resumen + botón */}
+
+
+              <div className="mt-8 flex justify-end">
+                <Button
+                  onClick={handleGenerateIdeas}
+                  className="bg-gradient-primary shadow-glow h-12 px-8 text-base"
+                >
+                  <Sparkles className="mr-2 h-4 w-4" /> Generar 3 Ideas
+                </Button>
+              </div>
+            </div>
           )}
+
+          {/* ── Paso 2: Las 3 opciones ─────────────────────────────────────── */}
+          {step === 1 && (
+            <div className="grid gap-6 animate-fade-in">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-display text-xl font-bold">Elegí tu proyecto</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    3 enfoques para <span className="font-medium text-foreground">{tema}</span> en <span className="font-medium text-foreground">{departamento}</span>
+                  </p>
+                </div>
+                <Button variant="outline" size="sm" onClick={() => setStep(0)}>
+                  Modificar datos
+                </Button>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6 mt-2">
+                {routes.map((route) => {
+                  const cfg = typeConfig[route.type as keyof typeof typeConfig] ?? { icon: FlaskConical, label: route.type ?? "", color: "text-primary" };
+                  const Icon = cfg.icon;
+                  return (
+                    <div
+                      key={route.id}
+                      className="flex flex-col rounded-xl border border-border bg-background p-6 transition-all hover:border-primary/50 hover:shadow-elegant group cursor-pointer"
+                      onClick={() => selectRoute(route)}
+                    >
+                      <div className="flex-1">
+                        <div className="flex items-start justify-between gap-2">
+                          <span className={cn("grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-accent", cfg.color)}>
+                            <Icon className="h-5 w-5" />
+                          </span>
+                          <span className="text-xs font-semibold px-2 py-1 bg-muted rounded-full text-muted-foreground whitespace-nowrap">
+                            {cfg.label}
+                          </span>
+                        </div>
+
+                        <h4 className="mt-4 font-semibold text-lg leading-tight group-hover:text-primary transition-colors">
+                          {route.title}
+                        </h4>
+                        <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                          {route.description}
+                        </p>
+                      </div>
+
+                      <div className="mt-6 pt-4 border-t border-border">
+                        <Button variant="ghost" className="w-full justify-between group-hover:bg-primary group-hover:text-primary-foreground transition-all">
+                          Elegir este proyecto <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 
