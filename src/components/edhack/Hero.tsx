@@ -32,29 +32,6 @@ const Hero = ({ onGenerate }: { onGenerate: () => void }) => {
           </Button>
         </div>
 
-        <div className="mt-16 mx-auto max-w-4xl rounded-2xl border border-border bg-card shadow-elegant overflow-hidden animate-scale-in">
-          <div className="flex items-center gap-1.5 border-b border-border px-4 py-3 bg-muted/40">
-            <span className="h-2.5 w-2.5 rounded-full bg-destructive/60" />
-            <span className="h-2.5 w-2.5 rounded-full bg-muted-foreground/40" />
-            <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
-            <span className="ml-3 text-xs text-muted-foreground">edhack.stem / generador</span>
-          </div>
-          <div className="grid grid-cols-2 gap-4 p-6 text-left">
-            <div className="rounded-xl bg-gradient-coast p-5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-foreground/70">Contexto</p>
-              <p className="mt-2 font-display text-xl font-semibold">Costa · Urbano</p>
-              <p className="mt-1 text-sm text-foreground/70">Categoría B · Eureka 2025</p>
-            </div>
-            <div className="rounded-xl bg-card border border-border p-5">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Fenómeno</p>
-              <p className="mt-2 font-display text-xl font-semibold">Hábitos de higiene</p>
-              <div className="mt-3 h-1.5 rounded-full bg-muted overflow-hidden">
-                <div className="h-full w-3/4 bg-gradient-primary animate-shimmer bg-[length:200%_100%]" />
-              </div>
-              <p className="mt-2 text-xs text-muted-foreground">Generando scaffolding…</p>
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );
