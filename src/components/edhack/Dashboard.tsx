@@ -60,7 +60,7 @@ const Dashboard = ({ guidesCreated }: { guidesCreated: number }) => {
   );
 };
 
-const Stat = ({ icon: Icon, label, value, sub, accent }: { icon: any; label: string; value: string; sub?: string; accent?: boolean }) => (
+const Stat = ({ icon: Icon, label, value, sub, accent }: { icon: React.ElementType; label: string; value: string; sub?: string; accent?: boolean }) => (
   <div className={`rounded-2xl border border-border bg-card p-6 shadow-sm`}>
     <Icon className={`h-7 w-7 ${accent ? "text-primary" : "text-muted-foreground"}`} />
     <p className="mt-4 text-sm text-muted-foreground">{label}</p>
