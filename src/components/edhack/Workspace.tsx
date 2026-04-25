@@ -3,11 +3,11 @@ import { Badge } from "@/components/ui/badge";
 import { BookOpen, Lightbulb, ListChecks, Pencil, Sparkles, FileText, NotebookPen, Target } from "lucide-react";
 
 interface WorkspaceProps {
-  data: { region: string; entorno: string; categoria: string; fenomeno: string; pro: boolean };
+  data: { departamento?: string; entorno: string; fenomeno: string; pro: boolean };
 }
 
 const Workspace = ({ data }: WorkspaceProps) => {
-  const regionLabel = data.region.charAt(0).toUpperCase() + data.region.slice(1);
+  const depLabel = data.departamento ? data.departamento.charAt(0).toUpperCase() + data.departamento.slice(1) : "Nacional";
   const entornoLabel = data.entorno.charAt(0).toUpperCase() + data.entorno.slice(1);
 
   return (
@@ -23,9 +23,8 @@ const Workspace = ({ data }: WorkspaceProps) => {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary">{regionLabel}</Badge>
+          <Badge variant="secondary">{depLabel}</Badge>
           <Badge variant="secondary">{entornoLabel}</Badge>
-          <Badge variant="secondary">Categoría {data.categoria}</Badge>
           {data.pro && <Badge className="bg-gradient-primary text-primary-foreground border-0">Eureka Pro</Badge>}
         </div>
       </div>
@@ -69,7 +68,7 @@ const Workspace = ({ data }: WorkspaceProps) => {
                 </p>
                 <ul className="mt-3 space-y-2 text-sm text-foreground/80">
                   <li>• En lugar de dar la respuesta, pregunta: <em>“¿qué evidencia te llevó a pensar eso?”</em></li>
-                  <li>• Usa analogías del contexto {regionLabel.toLowerCase()} para anclar el concepto.</li>
+                  <li>• Usa analogías del contexto {depLabel.toLowerCase()} para anclar el concepto.</li>
                   <li>• Modela una sola vez y luego retira el andamio para fomentar autonomía.</li>
                 </ul>
               </div>

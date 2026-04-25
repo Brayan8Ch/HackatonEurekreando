@@ -7,13 +7,12 @@ import Generator from "@/components/edhack/Generator";
 import Workspace from "@/components/edhack/Workspace";
 import Dashboard from "@/components/edhack/Dashboard";
 
-type GuideData = { region: string; entorno: string; categoria: string; fenomeno: string; pro: boolean };
+type GuideData = { departamento?: string; entorno: string; fenomeno: string; pro: boolean };
 
 const Index = () => {
   const [guide, setGuide] = useState<GuideData>({
-    region: "sierra",
+    departamento: "Lima",
     entorno: "rural",
-    categoria: "B",
     fenomeno: "Hábitos de higiene en la comunidad",
     pro: true,
   });

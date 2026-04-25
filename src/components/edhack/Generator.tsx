@@ -5,29 +5,35 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-const regions = [
-  { id: "costa", label: "Costa", icon: Waves },
-  { id: "sierra", label: "Sierra", icon: Mountain },
-  { id: "selva", label: "Selva", icon: TreePine },
+const departamentos = [
+  "Amazonas", "Áncash", "Apurímac", "Arequipa", "Ayacucho", "Cajamarca",
+  "Callao", "Cusco", "Huancavelica", "Huánuco", "Ica", "Junín", "La Libertad",
+  "Lambayeque", "Lima", "Loreto", "Madre de Dios", "Moquegua", "Pasco",
+  "Piura", "Puno", "San Martín", "Tacna", "Tumbes", "Ucayali"
 ];
 const entornos = [
   { id: "urbano", label: "Urbano", icon: Building2 },
   { id: "rural", label: "Rural", icon: Tractor },
 ];
-const categorias = ["A", "B", "C", "D", "E"];
 
 interface GeneratorProps {
-  onGenerated: (data: { region: string; entorno: string; categoria: string; fenomeno: string; pro: boolean }) => void;
+  onGenerated: (data: { departamento?: string; entorno: string; fenomeno: string; pro: boolean }) => void;
 }
 
 const Generator = ({ onGenerated }: GeneratorProps) => {
   const [step, setStep] = useState(0);
-  const [region, setRegion] = useState("sierra");
+  const [departamento, setDepartamento] = useState("");
   const [entorno, setEntorno] = useState("rural");
-  const [categoria, setCategoria] = useState("B");
   const [competencia, setCompetencia] = useState("Indaga mediante métodos científicos");
   const [capacidades, setCapacidades] = useState("Problematiza · Diseña estrategias · Genera y registra datos");
   const [fenomeno, setFenomeno] = useState("Hábitos de higiene en la comunidad");
@@ -37,10 +43,11 @@ const Generator = ({ onGenerated }: GeneratorProps) => {
 
   const handleGenerate = () => {
     const entornoLabel = entornos.find((e) => e.id === entorno)?.label ?? "";
+    const depTexto = departamento ? `Depto: ${departamento}` : "Sin departamento";
     toast.success(`Guía contextualizada para entorno ${entornoLabel} generada con éxito`, {
-      description: `Región ${region} · Categoría ${categoria}${pro ? " · Modo Eureka Pro" : ""}`,
+      description: `${depTexto}${pro ? " · Modo Eureka Pro" : ""}`,
     });
-    onGenerated({ region, entorno, categoria, fenomeno, pro });
+    onGenerated({ departamento, entorno, fenomeno, pro });
   };
 
   return (
@@ -81,21 +88,20 @@ const Generator = ({ onGenerated }: GeneratorProps) => {
         {step === 0 && (
           <div className="grid gap-8 animate-fade-in">
             <div>
-              <Label className="text-sm font-semibold">Región</Label>
-              <div className="mt-3 grid grid-cols-3 gap-3">
-                {regions.map((r) => (
-                  <button
-                    key={r.id}
-                    onClick={() => setRegion(r.id)}
-                    className={cn(
-                      "group relative rounded-xl border p-5 text-left transition-all duration-300 ease-smooth",
-                      region === r.id ? "border-primary bg-accent shadow-glow" : "border-border hover:border-primary/40 hover:bg-accent/40"
-                    )}
-                  >
-                    <r.icon className={cn("h-6 w-6 mb-3", region === r.id ? "text-primary" : "text-muted-foreground")} />
-                    <p className="font-medium">{r.label}</p>
-                  </button>
-                ))}
+              <Label className="text-sm font-semibold">Departamento</Label>
+              <div className="mt-3">
+                <Select value={departamento} onValueChange={setDepartamento}>
+                  <SelectTrigger className="w-full h-14 bg-background border-border rounded-xl px-5 transition-all hover:border-primary/40">
+                    <SelectValue placeholder="Selecciona un departamento..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {departamentos.map((dep) => (
+                      <SelectItem key={dep} value={dep}>
+                        {dep}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
             <div>
@@ -112,23 +118,6 @@ const Generator = ({ onGenerated }: GeneratorProps) => {
                   >
                     <e.icon className={cn("h-6 w-6 mb-3", entorno === e.id ? "text-primary" : "text-muted-foreground")} />
                     <p className="font-medium">{e.label}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <Label className="text-sm font-semibold">Categoría Eureka</Label>
-              <div className="mt-3 flex flex-wrap gap-2">
-                {categorias.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setCategoria(c)}
-                    className={cn(
-                      "h-11 w-11 rounded-lg border font-display font-semibold transition-all",
-                      categoria === c ? "bg-gradient-primary text-primary-foreground border-transparent shadow-glow" : "border-border hover:border-primary/40"
-                    )}
-                  >
-                    {c}
                   </button>
                 ))}
               </div>

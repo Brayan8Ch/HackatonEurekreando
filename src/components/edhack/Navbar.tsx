@@ -1,19 +1,5 @@
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-const departamentos = [
-  "Amazonas", "Áncash", "Apurímac", "Arequipa", "Ayacucho", "Cajamarca",
-  "Callao", "Cusco", "Huancavelica", "Huánuco", "Ica", "Junín", "La Libertad",
-  "Lambayeque", "Lima", "Loreto", "Madre de Dios", "Moquegua", "Pasco",
-  "Piura", "Puno", "San Martín", "Tacna", "Tumbes", "Ucayali"
-];
 
 interface NavbarProps {
   onNavigate: (id: string) => void;
@@ -37,19 +23,6 @@ const Navbar = ({ onNavigate }: NavbarProps) => {
           <button onClick={() => onNavigate("generador")} className="hover:text-foreground transition-colors">Generador</button>
           <button onClick={() => onNavigate("workspace")} className="hover:text-foreground transition-colors">Workspace</button>
           <button onClick={() => onNavigate("dashboard")} className="hover:text-foreground transition-colors">Mi Impacto</button>
-          
-          <Select>
-            <SelectTrigger className="w-[170px] h-9 text-xs bg-background/50 backdrop-blur border-border">
-              <SelectValue placeholder="Selecciona tu región" />
-            </SelectTrigger>
-            <SelectContent>
-              {departamentos.map((dep) => (
-                <SelectItem key={dep} value={dep.toLowerCase()}>
-                  {dep}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
         </nav>
         <Button onClick={() => onNavigate("generador")} className="bg-gradient-primary hover:opacity-90 transition-opacity shadow-glow">
           Generar guía
