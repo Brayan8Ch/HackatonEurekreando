@@ -30,10 +30,10 @@ Ofrecemos a los docentes:
 
 Nuestra plataforma está construida sobre una arquitectura multiagente que utiliza la **API de OpenAI** para procesar, validar y generar el contenido con alto rigor pedagógico:
 
-1. **Agente 1 (Extractor):** Lee el Currículo Nacional y extrae los estándares exactos del área de Ciencia y Tecnología.
+1. **Agente 1 (Etnografo):** Lee el Currículo Nacional y extrae los estándares exactos del área de Ciencia y Tecnología.
 2. **Agente 2 (Validador):** Analiza y valida si esos estándares son genuinamente observables y aplicables en un entorno de aula real.
 3. **Agente 3 (Diseñador):** Diseña la sesión de indagación estructurada estrictamente en 5 fases: *Pregunta → Hipótesis → Experimenta → Analiza → Concluye*.
-4. **Agente 4 (Contextualizador):** Adapta la sesión según el departamento del Perú (Ej. Piura, Apurímac, Lima) y el nivel educativo (primaria o secundaria).
+4. **Agente 4 (Arquitecto):** Adapta la sesión según el departamento del Perú (Ej. Piura, Apurímac, Lima) y el nivel educativo (primaria o secundaria).
 
 ---
 
