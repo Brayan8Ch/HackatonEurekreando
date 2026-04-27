@@ -9,6 +9,7 @@ import {
   Package, ShoppingCart, Leaf, Recycle, DollarSign,
 } from "lucide-react";
 import { GenerationConfig } from "@/pages/Index";
+import { API_BASE_URL } from "@/lib/api";
 
 interface WorkspaceProps {
   config: GenerationConfig;
@@ -94,7 +95,7 @@ const Workspace = ({ config }: WorkspaceProps) => {
 
     const generate = async () => {
       try {
-        const res = await fetch("/api/guide/generate", {
+        const res = await fetch(`${API_BASE_URL}/api/guide/generate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(config),

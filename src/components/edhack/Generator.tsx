@@ -13,6 +13,7 @@ import {
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { API_BASE_URL } from "@/lib/api";
 
 const departamentos = [
   "Amazonas", "Áncash", "Apurímac", "Arequipa", "Ayacucho", "Cajamarca",
@@ -102,10 +103,14 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
 
     try {
       const levelStr = nivel === "secundaria" ? "Secundaria" : "Primaria";
-      const res = await fetch("/api/guide/routes", {
+      const res = await fetch(`${API_BASE_URL}/api/guide/routes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ location: departamento, level: levelStr, topic: tema }),
+        body: JSON.stringify({
+          location: departamento,
+          level: levelStr,
+          topic: tema
+        })
       });
 
       if (!res.ok) throw new Error(`Error ${res.status}`);
