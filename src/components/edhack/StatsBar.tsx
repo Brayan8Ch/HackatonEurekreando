@@ -43,8 +43,8 @@ const StatItem = ({ value, suffix, label }: { value: number; suffix: string; lab
 
 const StatsBar = () => {
   return (
-    <section className="border-y border-border bg-card/40">
-      <div className="container py-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+    <section id="impacto" className="border-y border-border bg-card">
+      <div className="container py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
         <StatItem value={1500} suffix="+" label="horas ahorradas por docentes" />
         <StatItem value={85} suffix="%" label="mejora en calidad de proyectos" />
         <StatItem value={420} suffix="+" label="guías contextualizadas generadas" />

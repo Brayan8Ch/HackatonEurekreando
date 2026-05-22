@@ -53,9 +53,9 @@ const MOCK_ROUTES = [
 ];
 
 const typeConfig = {
-  física: { icon: FlaskConical, label: "Experimentación Física", color: "text-blue-500" },
-  biológica: { icon: Leaf, label: "Observación Biológica", color: "text-green-500" },
-  socioambiental: { icon: Globe, label: "Impacto Socio-Ambiental", color: "text-orange-500" },
+  física: { icon: FlaskConical, label: "Experimentación Física", color: "text-primary" },
+  biológica: { icon: Leaf, label: "Observación Biológica", color: "text-primary" },
+  socioambiental: { icon: Globe, label: "Impacto Socio-Ambiental", color: "text-primary" },
 };
 
 interface RouteOption {
@@ -180,10 +180,10 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
       </Dialog>
 
       {/* ── Sección principal ──────────────────────────────────────────────── */}
-      <section id="generador" className="container py-24">
+      <section id="generador" className="container py-16 md:py-20">
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-wide text-primary">IA en Acción</p>
-          <h2 className="mt-3 font-display text-3xl md:text-5xl font-bold tracking-tight">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">IA en Acción</p>
+          <h2 className="mt-3 font-display text-3xl md:text-5xl font-medium tracking-[-0.03em]">
             Agentes Diseñadores
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
@@ -213,7 +213,7 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
           ))}
         </ol>
 
-        <div className="mt-8 rounded-2xl border border-border bg-card p-6 md:p-10 shadow-elegant">
+        <div className="mt-8 rounded-[20px] border border-border bg-card p-6 md:p-10 shadow-elegant">
 
           {/* ── Paso 1: Formulario ─────────────────────────────────────────── */}
           {step === 0 && (
@@ -232,7 +232,7 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
                     <MapPin className="h-4 w-4 text-primary" /> Departamento
                   </Label>
                   <Select value={departamento} onValueChange={setDepartamento}>
-                    <SelectTrigger className="h-12 bg-background border-border rounded-xl px-4 transition-all hover:border-primary/40 focus:ring-primary">
+                    <SelectTrigger className="h-12 bg-background border-border rounded-lg px-4 transition-all hover:border-primary/40 focus:ring-primary">
                       <SelectValue placeholder="¿Dónde enseñás?" />
                     </SelectTrigger>
                     <SelectContent>
@@ -249,7 +249,7 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
                     <GraduationCap className="h-4 w-4 text-primary" /> Nivel Educativo
                   </Label>
                   <Select value={nivel} onValueChange={setNivel}>
-                    <SelectTrigger className="h-12 bg-background border-border rounded-xl px-4 transition-all hover:border-primary/40 focus:ring-primary">
+                    <SelectTrigger className="h-12 bg-background border-border rounded-lg px-4 transition-all hover:border-primary/40 focus:ring-primary">
                       <SelectValue placeholder="Seleccioná el nivel" />
                     </SelectTrigger>
                     <SelectContent>
@@ -270,7 +270,7 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
                   value={tema}
                   onChange={(e) => setTema(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleGenerateIdeas()}
-                  className="h-12 rounded-xl px-4 border-border transition-all hover:border-primary/40"
+                  className="h-12 rounded-lg px-4 border-border transition-all hover:border-primary/40"
                   placeholder="Ej: Sistema solar, Plantas medicinales, Contaminación del agua..."
                 />
               </div>
@@ -281,7 +281,7 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
               <div className="mt-8 flex justify-end">
                 <Button
                   onClick={handleGenerateIdeas}
-                  className="bg-gradient-primary shadow-glow h-12 px-8 text-base"
+                  className="bg-primary shadow-glow h-12 px-8 text-base text-primary-foreground hover:bg-primary/90"
                 >
                   <Sparkles className="mr-2 h-4 w-4" /> Generar 3 Ideas
                 </Button>
@@ -311,7 +311,7 @@ const Generator = ({ onRouteSelected }: GeneratorProps) => {
                   return (
                     <div
                       key={route.id}
-                      className="flex flex-col rounded-xl border border-border bg-background p-6 transition-all hover:border-primary/50 hover:shadow-elegant group cursor-pointer"
+                      className="flex flex-col rounded-[20px] border border-border bg-background p-6 transition-all hover:border-primary/50 hover:shadow-elegant group cursor-pointer"
                       onClick={() => selectRoute(route)}
                     >
                       <div className="flex-1">
